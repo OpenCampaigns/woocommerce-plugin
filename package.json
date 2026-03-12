@@ -1,0 +1,15 @@
+{
+    "name": "opencampaigns-woo-plugin-js",
+    "version": "1.0.0",
+    "description": "JS Bundler for open campaigns woo",
+    "scripts": {
+        "build": "esbuild src/admin.ts --bundle --outfile=assets/admin.js"
+    },
+    "dependencies": {
+        "@opencampaigns/sdk": "file:../sdk"
+    },
+    "devDependencies": {
+        "esbuild": "^0.20.0",
+        "typescript": "^5.3.3"
+    }
+}
