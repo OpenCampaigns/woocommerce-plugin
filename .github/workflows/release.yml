@@ -1,0 +1,48 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+
+    - name: Install JS dependencies and Build UI
+      run: |
+        npm install
+        npm run build
+
+    - name: Package Plugin
+      run: |
+        mkdir -p release/opencampaigns-woo
+        cp opencampaigns-woo.php release/opencampaigns-woo/
+        cp -r assets release/opencampaigns-woo/ || true
+        cp -r vendor release/opencampaigns-woo/ || true
+        cp README.md LICENSE release/opencampaigns-woo/
+        cd release && zip -r ../opencampaigns-woo-plugin.zip opencampaigns-woo/
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: opencampaigns-woo-plugin
+        path: opencampaigns-woo-plugin.zip
